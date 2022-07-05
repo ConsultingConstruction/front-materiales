@@ -39,21 +39,66 @@ function TableProvider(props) {
   const [listarFlujoRev, setListarFlujoRev] = React.useState([])
   const [listarIonCloruro, setListarIonCloruro] = React.useState([])
   const [listarFibraConcre, setListarFibraConcre] = React.useState([])
+  const [datosConcreto, setDatosConcreto] = React.useState([])
   const [listarConcretosMateriales, setListarConcretosMateriales] = React.useState([])
   const [omniClass, setOmniClass] = React.useState(23)
   const [datosModal, setDatosModal] = React.useState('')
-
+  const [datoBaseTabla, setDatoBaseTabla] = React.useState([]);
 
 
   //UseEffect initializes the Api
   React.useEffect(() => {
     fetchData();
+
   }, []);
 
   //URL base for API requests
   // const URL = 'http://msdocs-python-test-webapp-117.azurewebsites.net/api/v1/';
   const URL = 'http://127.0.0.1:8000/'
 
+  const datosBaseParaLaTabla = [
+    "Consecutivo",
+    "CodigoOmc23",
+    "descriCorta",
+    "SiglaEsf",
+    "ValorEsfuerzo",
+    "Unidadval",
+    "TipoResistencia",
+    "SiglaTma",
+    "valTma",
+    "SiglaRev",
+    "valRev",
+    "Unidad",
+  ];
+
+  const datosFaltantesTabla = [
+    "numMat",
+    "descriLarga",
+    "Comentarios",
+    "palabrasCve",
+    "desCorEng",
+    "desLargEng",
+    "fuenteInf",
+    "fecRegInf",
+    "codigoBimsa",
+    "Nombre",
+    "tipoEsfuerzo",
+    "tmaFrac",
+    "TipoCons",
+    "modElast",
+    "Acronimo",
+    "Edad",
+    "absorcionCap",
+    "Acronimo2",
+    "trabaExtend",
+    "Clase",
+    "Color",
+    "Comportamiento",
+    "conAire",
+    "conIonClor",
+    "tiempoPrueba",
+    "tipoSistema",
+  ]
 
   //Get API
   const fetchData = async () => {
@@ -118,11 +163,44 @@ function TableProvider(props) {
     const listarFibraConcreData = await listarFibraConcre.json();
     await setListarFibraConcre(listarFibraConcreData.results);
 
-    const listarConcretosMateriales = await fetch(`${URL}apiMateriales/ListarConcretosMateriales/`);
-    const listarConcretosMaterialesData = await listarConcretosMateriales.json();
+    const listarConcretosMaterial = await fetch(`${URL}apiMateriales/ListarConcretosMateriales/`);
+    const listarConcretosMaterialesData = await listarConcretosMaterial.json();
     await setListarConcretosMateriales(listarConcretosMaterialesData);
 
+    // await setDatosConcreto(Object.keys(listarConcretosMaterialesData[0]));
 
+    setDatosConcreto([
+      "numMat",
+      "descriLarga",
+      "Comentarios",
+      "palabrasCve",
+      "desCorEng",
+      "desLargEng",
+      "fuenteInf",
+      "fecRegInf",
+      "codigoBimsa",
+      "Nombre",
+      "tipoEsfuerzo",
+      "tmaFrac",
+      "TipoCons",
+      "modElast",
+      "Acronimo",
+      "Edad",
+      "absorcionCap",
+      "Acronimo2",
+      "trabaExtend",
+      "Clase",
+      "Color",
+      "Comportamiento",
+      "conAire",
+      "conIonClor",
+      "tiempoPrueba",
+      "tipoSistema",
+    ]
+    )
+
+
+    setDatoBaseTabla(datosBaseParaLaTabla);
   };
 
   const apis = async () => {
@@ -130,22 +208,17 @@ function TableProvider(props) {
     const data = await fetch(`${URL}apiOMC${omniClass}/ListarOMC${omniClass}Nivel1/`)
     const users = await data.json();
     await setNivel1(users.results);
-    //  await console.table(users.results);
     await setDatos(users.results);
-    console.log(`${URL}apiOMC${omniClass}/ListarOMC${omniClass}Nivel1/`);
-    console.table(users.results);
 
     //Level 2 data
     const data2 = await fetch(`${URL}apiOMC${omniClass}/ListarOMC${omniClass}Nivel2/`)
     const users2 = await data2.json();
     await setNivel2(users2.results);
-    //  await console.table(users2.results);
 
     //Level 3 data
     const data3 = await fetch(`${URL}apiOMC${omniClass}/ListarOMC${omniClass}Nivel3/`)
     const users3 = await data3.json();
     await setNivel3(users3.results);
-    //  await console.table(users3.results);
 
     //Level 4 data
     const data4 = await fetch(`${URL}apiOMC${omniClass}/ListarOMC${omniClass}Nivel4/`)
@@ -199,9 +272,8 @@ function TableProvider(props) {
       await setNivel2View(reg);
     }
     setNiveles("3")
-    // await console.log(descripcion)
     await setInformacion([...informacion, { nivel: 'Nivel 1', descrip: descripcion }]);
-    // console.table(informacion);
+
   }
   const getNivel3 = async (idLevel) => {
     if (!tableBool) {
@@ -215,7 +287,6 @@ function TableProvider(props) {
     }
     setNiveles("4")
     setInformacion([...informacion, { nivel: 'Nivel 2', descrip: descripcion }]);
-    // console.table(informacion);
   }
   const getNivel4 = async (idLevel) => {
     if (!tableBool) {
@@ -229,7 +300,6 @@ function TableProvider(props) {
     }
     setNiveles("5")
     setInformacion([...informacion, { nivel: 'Nivel 3', descrip: descripcion }]);
-    // console.table(informacion);
   }
   const getNivel5 = async (idLevel) => {
     if (!tableBool) {
@@ -243,7 +313,6 @@ function TableProvider(props) {
     }
     setNiveles("6")
     setInformacion([...informacion, { nivel: 'Nivel 4', descrip: descripcion }]);
-    // console.table(informacion);
   }
   const getNivel6 = async (idLevel) => {
     if (!tableBool) {
@@ -256,7 +325,6 @@ function TableProvider(props) {
       setNiveles("7")
     }
     setInformacion([...informacion, { nivel: 'Nivel 5', descrip: descripcion }]);
-    // console.table(informacion);
   }
   //Return Values
   const volver = (valor) => {
@@ -318,38 +386,29 @@ function TableProvider(props) {
     volver(0)
     setTablesBool(!tableBool)
     await setOmniClass(41)
-    console.log('es falso');
-    console.log(omniClass)
     apis()
     setTimeout(() => {
       setOmniClass(23)
-      console.log(omniClass)
       setLoading(false);
     }, 2000);
     // setOmniClass(valor);
-    // console.log(omniClass);
     // apis();
     // setTimeout(() => {
-    //   volver(0);
-    //   console.log(omniClass);
-    //   console.table(nivel1);  
+    //   volver(0);  
     //   setLoading(false);
     // }, 1000);
     // setTablesBool(!tableBool);
     setLoading(true);
-    // console.table(nivel1);
   }
 
   const omniclass23 = () => {
     volver(0)
     setTablesBool(!tableBool)
     setOmniClass(23);
-    console.log(omniClass);
     apis();
     setLoading(true);
     setTimeout(() => {
       setOmniClass(41)
-      console.log(omniClass)
 
       setLoading(false);
     }, 2000);
@@ -359,6 +418,20 @@ function TableProvider(props) {
 
   }
 
+  const addTable = (name) => {
+    setDatoBaseTabla([...datoBaseTabla, name]);
+    setDatosConcreto(datosConcreto.filter((reg) => reg !== name));
+  };
+
+  const deleteTableMaterials = (name) => {
+    setDatosConcreto([...datosConcreto, name]);
+    setDatoBaseTabla(datoBaseTabla.filter((datos) => datos !== name));
+  };
+
+  const resetTabla = () => {
+    setDatoBaseTabla(datosBaseParaLaTabla);
+    setDatosConcreto(datosFaltantesTabla);
+  };
   return (
     <TableContext.Provider value={{
       volver,
@@ -397,6 +470,15 @@ function TableProvider(props) {
       setDatosModal,
       datosModal,
       listarConcretosMateriales,
+      datosConcreto,
+      setDatosConcreto,
+      setDatoBaseTabla,
+      datoBaseTabla,
+      datosBaseParaLaTabla,
+      datosFaltantesTabla,
+      addTable,
+      deleteTableMaterials,
+      resetTabla,
     }}>
       {props.children}
     </TableContext.Provider>

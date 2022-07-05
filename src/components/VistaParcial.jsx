@@ -135,7 +135,7 @@ function VistaParcial() {
       redirect: "follow",
     };
 
-    fetch("http://127.0.0.1:8000/api/v1/CrearMaterial/", requestOptions)
+    fetch("http://127.0.0.1:8000/apiMateriales/CrearMaterial/", requestOptions)
       .then((response) => response.text())
       .then((result) => console.log(result))
       .catch((error) => console.log("error", error));
@@ -173,7 +173,7 @@ function VistaParcial() {
       redirect: "follow",
     };
 
-    fetch("http://127.0.0.1:8000/api/v1/CrearConcreto/", requestOptions)
+    fetch("http://127.0.0.1:8000/apiMateriales/CrearConcreto/", requestOptions)
       .then((response) => response.text())
       .then((result) => console.log(result))
       .catch((error) => console.log("error", error));
@@ -212,7 +212,7 @@ function VistaParcial() {
       redirect: "follow",
     };
 
-    fetch("http://127.0.0.1:8000/api/v1/CrearCaracEspe/", requestOptions)
+    fetch("http://127.0.0.1:8000/apiMateriales/CrearCaracEspe/", requestOptions)
       .then((response) => response.text())
       .then((result) => console.log(result))
       .catch((error) => console.log("error", error));
@@ -787,14 +787,16 @@ function VistaParcial() {
               className="form-control"
               id="comentarios"
               row="3"
-              onChange={(e) => setComentarios(e.target.value)}
+              onChange={(e) => {
+                setComentarios(e.target.value);
+              }}
             ></textarea>
           </div>
         </div>
         <button
           type="submit"
           className="btn btn-success mt-5"
-          onClick={descripcionc}
+          onClick={crearDatosDeMateriales}
         >
           Registrar
         </button>

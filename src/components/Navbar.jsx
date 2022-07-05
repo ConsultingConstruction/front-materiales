@@ -9,7 +9,7 @@ function Navbar() {
       headerpd = document.getElementById("header");
 
     // // show navbar
-    nav.classList.toggle("show");
+    nav.classList.toggle("show-navbar");
     // change icon
     toggle.classList.toggle("bx-x");
     // add padding to body

@@ -1,34 +1,91 @@
 import React from "react";
 import { TableContext } from "../Context/TableContext";
 import { RiFileEditFill } from "react-icons/ri";
+import { BiExport } from "react-icons/bi";
 import { Estructura } from "./Estructura";
 import "./TableApi.css";
+import { ModalMateriales } from "./ModalMateriales";
+import { CSVLink } from "react-csv";
+import OverlayTrigger from "react-bootstrap/OverlayTrigger";
+import Tooltip from "react-bootstrap/Tooltip";
+
 function ListaDeMateriales() {
-  const {
-    formularioActivate,
-    vistaParcial,
-    material,
-    concreto,
-    numMaterial,
-    listarEsfuerzo,
-    listarValorEsfuerzo,
-    listarUnidadesMedida,
-    listarTipoResistencia,
-    listarAplPrincipales,
-    listarTMA,
-    listarRevenimiento,
-    listarDensidad,
-    listarSistColocacion,
-    listarClasExposicion,
-    listarFlujoRev,
-    listarIonCloruro,
-    setFormularioActivate,
-    listarFibraConcre,
-    setDatosModal,
-    listarConcretosMateriales,
-  } = React.useContext(TableContext);
+  const { listarConcretosMateriales, datoBaseTabla, resetTabla, datos } =
+    React.useContext(TableContext);
 
   const [estructura, setEstructura] = React.useState(false);
+
+  const datosGenerales = {
+    numMat: "numMat",
+    CodigoOmc23: "Código",
+    Consecutivo: "No.",
+    descriCorta: "Descripción Corta",
+    descriLarga: "Descripción Larga",
+    Comentarios: "Comentarios",
+    palabrasCve: "palabras Clave",
+    desCorEng: "Descripción Corta Inglés",
+    desLargEng: "Descripción Larga Inglés",
+    fuenteInf: "fuente Información",
+    fecRegInf: "fecha de registro",
+    codigoBimsa: "Código Bimsa",
+    Nombre: "Nombre",
+    SiglaEsf: "",
+    ValorEsfuerzo: "Valor del Esfuerzo",
+    Unidadval: "",
+    tipoEsfuerzo: "Tipo Esfuerzo",
+    TipoResistencia: "Tipo Resistencia",
+    SiglaTma: "",
+    valTma: "Valor del Tma",
+    SiglaRev: "",
+    tmaFrac: "",
+    valRev: "Valor Revenimiento",
+    Unidad: "",
+    TipoCons: "Tipo de Consistencia",
+    modElast: "Modulo de Elasticidad",
+    Acronimo: "",
+    Edad: "Edad",
+    absorcionCap: "Absorción Capilar",
+    Acronimo2: "",
+    trabaExtend: "Trabajo extendido",
+    Clase: "Clase",
+    Color: "Color",
+    Comportamiento: "Comportamiento",
+    conAire: "Condición de Aire",
+    conIonClor: "Condición de Ion",
+    tiempoPrueba: "Tiempo de prueba",
+    tipoSistema: "Tipo de sistema",
+  };
+
+  // const datosBaseParaLaTabla = [
+  //   "numMat",
+  //   "descriLarga",
+  //   "Comentarios",
+  //   "palabrasCve",
+  //   "desCorEng",
+  //   "desLargEng",
+  //   "fuenteInf",
+  //   "fecRegInf",
+  //   "codigoBimsa",
+  //   "Nombre",
+  //   "tipoEsfuerzo",
+  //   "tmaFrac",
+  //   "TipoCons",
+  //   "modElast",
+  //   "Acronimo",
+  //   "Edad",
+  //   "absorcionCap",
+  //   "Acronimo2",
+  //   "trabaExtend",
+  //   "Clase",
+  //   "Color",
+  //   "Comportamiento",
+  //   "conAire",
+  //   "conIonClor",
+  //   "tiempoPrueba",
+  //   "tipoSistema",
+  // ];
+
+  console.log(datoBaseTabla);
 
   return (
     <div className="container vh-100">
@@ -106,80 +163,48 @@ function ListaDeMateriales() {
         </div>
       </div>
       <br />
-      <table className="table">
-        <thead>
-          <tr>
-            <th>No.</th>
-            <th>Codigo</th>
-            <th>Descripción corta</th>
-            <th></th>
-            <th>Valor del esfuerza</th>
-            <th></th>
-            <th>Tipo de resitencia</th>
-            <th></th>
-            <th>VAlor del TMA</th>
-            <th></th>
-            <th>VAlor del revenimiento</th>
-            <th></th>
-            <th>Editar</th>
-          </tr>
-        </thead>
-        <tbody>
-          {listarConcretosMateriales.map((item, index) => (
-            <tr key={index}>
-              <td>{item.Consecutivo}</td>
-              <td>{item.CodigoOmc23}</td>
-              <td></td>
-              <td>{item.SiglaEsf}</td>
-              <td>{item.ValorEsfuerzo}</td>
-              <td>{item.Unidadval}</td>
-              <td>{item.TipoResistencia}</td>
-              <td>{item.SiglaTma}</td>
-              <td>{item.valTma}</td>
-              <td>{item.SiglaRev}</td>
-              <td>{item.valRev}</td>
-              <td>{item.Unidad}</td>
-              <td>
-                <RiFileEditFill className="trash" />
-              </td>
+      <div style={{ textAlign: "end" }}>
+        <OverlayTrigger
+          placement="left"
+          overlay={<Tooltip id="tooltip-disabled">Exportar a CSV</Tooltip>}
+        >
+          <CSVLink
+            data={listarConcretosMateriales}
+            filename={"listarConcretosMateriales.csv"}
+            className="h3 me-1 text-success"
+          >
+            <BiExport />
+          </CSVLink>
+        </OverlayTrigger>
+        <ModalMateriales className="justify-aling-end" />
+      </div>
+
+      <div className="table-responsive">
+        <table className="table">
+          <thead>
+            <tr id="table-materials-title">
+              {datoBaseTabla.map((title, index) => (
+                <th className="" key={index}>
+                  {datosGenerales[title]}
+                </th>
+              ))}
+              <th>Editar</th>
             </tr>
-          ))}
-          <tr className="seleccion">
-            <td>1</td>
-            <td>23-133113-00001</td>
-            <td></td>
-            <td>f`c</td>
-            <td>350</td>
-            <td>kg/cm2</td>
-            <td>Resistencia normal</td>
-            <td>TMA</td>
-            <td>20</td>
-            <td>rev</td>
-            <td>120</td>
-            <td>mm</td>
-            <td>
-              <RiFileEditFill className="trash" />
-            </td>
-          </tr>
-          <tr className="seleccion">
-            <td>2</td>
-            <td>23-133113-00002</td>
-            <td></td>
-            <td>f`c</td>
-            <td>350</td>
-            <td>kg/cm2</td>
-            <td>Resistencia normal</td>
-            <td>TMA</td>
-            <td>20</td>
-            <td>rev</td>
-            <td>120</td>
-            <td>mm</td>
-            <td>
-              <RiFileEditFill className="trash" />
-            </td>
-          </tr>
-        </tbody>
-      </table>
+          </thead>
+          <tbody>
+            {listarConcretosMateriales.map((material, index) => (
+              <tr key={index} id="table-materials" className="seleccion">
+                {datoBaseTabla.map((item, index) => (
+                  <td key={index}>{material[`${item}`]}</td>
+                ))}
+                <td>
+                  <RiFileEditFill className="trash" onClick={resetTabla} />
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
       <div className="row justify-content-between">
         <div className="col-12 col-md-2 py-2">
           <select name="" id="" className="form-select">
@@ -229,6 +254,35 @@ function ListaDeMateriales() {
           </select>
         </div>
       </div>
+
+      {/* <table className="table" id="tableMaterials">
+        <thead>
+          <tr>
+            <th scope="col">ID</th>
+            <th scope="col">Código</th>
+            <th scope="col">Descripción en Español</th>
+            <th scope="col">Descripción en Ingles</th>
+            <th className="text-center" scope="col">
+              Acción
+            </th>
+          </tr>
+        </thead>
+        <tbody>
+          {datos.map((item, index) => (
+            <tr
+              key={index}
+              className="seleccion"
+              id={item[`${datoBaseTabla[index]}`]}
+            >
+              {parametros.map((parametro, index) => (
+                <td key={parametro} className="col">
+                  {item[`${parametro}`]}
+                </td>
+              ))}
+            </tr>
+          ))}
+        </tbody>
+      </table> */}
     </div>
   );
 }
